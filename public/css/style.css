@@ -1,0 +1,26 @@
+form {
+  border: 1px solid #dee2e6;
+  border-radius: 3px;
+  padding: 1em;
+}
+input[type=date] {
+  max-width: 18%;
+}
+
+.phone-container {
+  display: flex;
+  max-width: 50%;
+}
+.phone-container .form-control {
+  max-width: 90%;
+  margin-right: 20px;
+}
+
+.error {
+  color: red;
+}
+
+textarea {
+  resize: vertical;
+  max-height: 8em;
+}
