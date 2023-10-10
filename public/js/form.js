@@ -5,7 +5,19 @@ form.onsubmit = (e) => {
   e.preventDefault()
   if (document.activeElement !== submitButton) return
 
-  fetch('/api/check')
+  const formData = new FormData(form)
+  // const formDataObject = {}
+  // formData.forEach((value, key) => formDataObject[key] = value)
+  // console.log(formDataObject)
+  fetch('/api/check', {
+    method: 'POST',
+    // TODO: i can probably delete headers bc, probably, fetch automatically sets proper content-type with boundary
+    // 🎯 write it into knowledge
+    // headers: {
+    //   'Content-Type': 'multipart/form-data',
+    // },
+    body: formData
+  })
     .then(response => response.text())
     .then(data => console.log(data))
 }

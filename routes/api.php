@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FormController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/check', function (Request $request) {
-  return 'zxczxc';
-});
+Route::post('/check', [FormController::class, 'submit']);

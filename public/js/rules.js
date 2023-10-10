@@ -19,11 +19,11 @@ class Rule {
 
   populateErrorsBag() {
     errorsBag.set(this.getErrorId(), true)
-    submitButton.disabled = errorsBag.size !== 0
+    // submitButton.disabled = errorsBag.size !== 0
   }
   depopulateErrorsBag() {
     errorsBag.delete(this.getErrorId())
-    submitButton.disabled = errorsBag.size !== 0
+    // submitButton.disabled = errorsBag.size !== 0
   }
 
   errorMessage() {}

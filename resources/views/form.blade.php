@@ -13,7 +13,7 @@
 <body class="container pt-4">
 <h2 class="mb-3">Заполните, пожалуйста, форму:</h2>
 
-<form method="POST" action="/submit">
+<form method="POST" enctype="multipart/form-data">
   <div class="mb-3">
     <label class="form-label" for="firstName">Имя <span style="color: red;">*</span></label>
     <input class="form-control" name="firstName" id="firstName">

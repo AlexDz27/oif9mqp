@@ -4,10 +4,12 @@ namespace App\Services;
 
 class FormValidator {
   public static function validate($formData) {
-    if ($formData['firstName'] === null) {
-      return false;
-    }
+    var_dump($formData);
 
-    return true;
+    // if ($formData['firstName'] === null) {
+    //   return false;
+    // }
+
+    // return true;
   }
 }
