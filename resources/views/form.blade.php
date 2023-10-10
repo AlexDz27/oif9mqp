@@ -29,10 +29,13 @@
     <input class="form-control" name="patronymic" id="patronymic">
   </div>
 
-  {{-- TODO: 'max' attr for date --}}
   <div class="mb-3">
     <label class="form-label" for="dateOfBirth">Дата рождения <span style="color: red;">*</span></label>
     <input type="date" class="form-control" name="dateOfBirth" id="dateOfBirth">
+    <script>
+      const dateOfBirthInput = document.querySelector('input[type=date]')
+      dateOfBirthInput.max = new Date().toISOString().split("T")[0]
+    </script>
   </div>
 
   <div class="mb-3">
