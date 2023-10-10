@@ -9,7 +9,7 @@ class Rule {
         || this.constructor.name === 'RuleAgreed'
         || this.constructor.name === 'RuleEmailOrPhone'
     ) {
-      this.populateForbiddenErrorsBag()
+      this.populateErrorsBag()
     }
   }
 
@@ -17,13 +17,13 @@ class Rule {
     return `error-${this.constructor.name}-${this.name}`
   }
 
-  populateForbiddenErrorsBag() {
-    forbiddenErrorsBag.set(this.getErrorId(), true)
-    submitButton.disabled = forbiddenErrorsBag.size !== 0
+  populateErrorsBag() {
+    errorsBag.set(this.getErrorId(), true)
+    submitButton.disabled = errorsBag.size !== 0
   }
-  depopulateForbiddenErrorsBag() {
-    forbiddenErrorsBag.delete(this.getErrorId())
-    submitButton.disabled = forbiddenErrorsBag.size !== 0
+  depopulateErrorsBag() {
+    errorsBag.delete(this.getErrorId())
+    submitButton.disabled = errorsBag.size !== 0
   }
 
   errorMessage() {}
@@ -62,9 +62,9 @@ class RuleRequired extends Rule {
   enforce() {
     this.input.addEventListener('input', () => {
       if (this.input.value.trim().length === 0) {
-        this.populateForbiddenErrorsBag()
+        this.populateErrorsBag()
       } else {
-        this.depopulateForbiddenErrorsBag()
+        this.depopulateErrorsBag()
       }
     })
 
@@ -89,6 +89,14 @@ class RuleMaxLength extends Rule {
   }
 
   enforce() {
+    this.input.addEventListener('input', () => {
+      if (this.input.value.length > this.maxLength) {
+        this.populateErrorsBag()
+      } else {
+        this.depopulateErrorsBag()
+      }
+    })
+
     this.input.addEventListener('blur', () => {
       if (this.input.value.length > this.maxLength) {
         this.showError()
@@ -105,6 +113,14 @@ class RuleEmail extends Rule {
 
   enforce() {
     const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+
+    this.input.addEventListener('input', () => {
+      if (this.input.value.trim().length !== 0 && !emailRegex.test(this.input.value)) {
+        this.populateErrorsBag()
+      } else {
+        this.depopulateErrorsBag()
+      }
+    })
 
     this.input.addEventListener('blur', () => {
       if (this.input.value.trim().length !== 0 && !emailRegex.test(this.input.value)) {
@@ -123,9 +139,9 @@ class RuleAgreed extends Rule {
   enforce() {
     this.input.addEventListener('change', () => {
       if (!this.input.checked) {
-        this.populateForbiddenErrorsBag()
+        this.populateErrorsBag()
       } else {
-        this.depopulateForbiddenErrorsBag()
+        this.depopulateErrorsBag()
       }
     })
 
@@ -152,21 +168,15 @@ class RuleFiles extends Rule {
   }
 
   enforce() {
-    this.input.addEventListener('input', () => {
-      if (this.input.value.trim().length === 0) {
-        this.populateForbiddenErrorsBag()
-      } else {
-        this.depopulateForbiddenErrorsBag()
-      }
-    })
-
     this.input.addEventListener('change', () => {
       const files = this.input.files
       const oneOfFilesExceedsMaxSize = [...files].some(file => file.size > this.maxSizePerFile)
       const oneOfFilesIsNotAllowedFormat = [...files].some(file => file.type !== 'image/png' && file.type !== 'image/jpeg' && file.type !== 'application/pdf')
       if (files.length > 5 || oneOfFilesExceedsMaxSize || oneOfFilesIsNotAllowedFormat) {
+        this.populateErrorsBag()
         this.showError()
       } else {
+        this.depopulateErrorsBag()
         this.hideError()
       }
     })
@@ -186,16 +196,16 @@ class RuleEmailOrPhone extends Rule {
   enforce() {
     this.input.addEventListener('input', () => {
       if (this.input.value.trim().length === 0) {
-        this.populateForbiddenErrorsBag()
+        this.populateErrorsBag()
       } else {
-        this.depopulateForbiddenErrorsBag()
+        this.depopulateErrorsBag()
       }
     })
     this.emailInput.addEventListener('input', () => {
       if (this.emailInput.value.trim().length === 0) {
-        this.populateForbiddenErrorsBag()
+        this.populateErrorsBag()
       } else {
-        this.depopulateForbiddenErrorsBag()
+        this.depopulateErrorsBag()
       }
     })
 

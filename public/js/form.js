@@ -5,7 +5,7 @@ form.onsubmit = (e) => {
   if (document.activeElement !== submitButton) e.preventDefault()
 }
 
-const forbiddenErrorsBag = new Map()
+const errorsBag = new Map()
 
 class Input {
   constructor(name, nameRussian, rules) {
