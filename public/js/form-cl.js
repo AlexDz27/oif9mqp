@@ -72,10 +72,30 @@ class RuleMaxLength extends Rule {
     })
   }
 }
+class RuleEmail extends Rule {
+  errorMessage() {
+    return `Поле "${this.nameRussian}" должно быть валидным имейл-адресом`
+  }
+
+  enforce() {
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+
+    this.input.addEventListener('blur', () => {
+      if (this.input.value.trim().length !== 0 && !emailRegex.test(this.input.value)) {
+        this.showError()
+      } else {
+        this.hideError()
+      }
+    })
+  }
+}
 
 const inputsWithValidationRules = [
   new Input('firstName', 'имя', [RuleRequired, RuleMaxLength]),
-  new Input('secondName', 'фамилия', [RuleRequired, RuleMaxLength])
+  new Input('secondName', 'фамилия', [RuleRequired, RuleMaxLength]),
+  new Input('patronymic', 'отчество', [RuleMaxLength]),
+  new Input('dateOfBirth', 'дата рождения', [RuleRequired]),
+  new Input('email', 'имейл', [RuleEmail]),
 ]
 
 // possible for OR
