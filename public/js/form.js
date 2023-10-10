@@ -1,8 +1,13 @@
 const form = document.querySelector('form')
-// Пункт 2 - "Форма не должна отправляться при нажатии на клавишу на клавиатуре Enter"
 const submitButton = form.querySelector('button[type=submit]')
 form.onsubmit = (e) => {
-  if (document.activeElement !== submitButton) e.preventDefault()
+  // Пункт 2 - "Форма не должна отправляться при нажатии на клавишу на клавиатуре Enter"
+  e.preventDefault()
+  if (document.activeElement !== submitButton) return
+
+  fetch('/api/check')
+    .then(response => response.text())
+    .then(data => console.log(data))
 }
 
 const errorsBag = new Map()
