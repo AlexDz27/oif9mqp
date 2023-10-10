@@ -89,6 +89,47 @@ class RuleEmail extends Rule {
     })
   }
 }
+class RuleAgreed extends Rule {
+  errorMessage() {
+    return `Вы должны быть согласны с правилами, чтобы отправить форму`
+  }
+
+  enforce() {
+    this.input.addEventListener('blur', () => {
+      if (!this.input.checked) {
+        this.showError()
+      } else {
+        this.hideError()
+      }
+    })
+  }
+}
+class RuleFiles extends Rule {
+  // 'maxSize = 5e+6' means 5000000 (5 million). In our case, 5 megabytes
+  constructor(name, nameRussian, maxFiles = 5, maxSizePerFile = 5e+6, allowedFormats = ['jpg', 'png', 'pdf']) {
+    super(name, nameRussian)
+    this.maxFiles = maxFiles
+    this.maxSizePerFile = maxSizePerFile
+    this.allowedFormats = allowedFormats
+  }
+
+  errorMessage() {
+    return `Правила для файлов: максимум файлов: 5; максимальный размер одного файла: 5мб; разрешенные форматы: jpg, png, pdf`
+  }
+
+  enforce() {
+    this.input.addEventListener('change', () => {
+      const files = this.input.files
+      const oneOfFilesExceedsMaxSize = [...files].some(file => file.size > this.maxSizePerFile)
+      const oneOfFilesIsNotAllowedFormat = [...files].some(file => file.type !== 'image/png' && file.type !== 'image/jpeg' && file.type !== 'application/pdf')
+      if (files.length > 5 || oneOfFilesExceedsMaxSize || oneOfFilesIsNotAllowedFormat) {
+        this.showError()
+      } else {
+        this.hideError()
+      }
+    })
+  }
+}
 
 const inputsWithValidationRules = [
   new Input('firstName', 'имя', [RuleRequired, RuleMaxLength]),
@@ -96,7 +137,9 @@ const inputsWithValidationRules = [
   new Input('patronymic', 'отчество', [RuleMaxLength]),
   new Input('dateOfBirth', 'дата рождения', [RuleRequired]),
   new Input('email', 'имейл', [RuleEmail]),
-  new Input('about', 'о себе', [RuleMaxLength.bind(null, 'about', 'о себе', 30)]),
+  new Input('about', 'о себе', [RuleMaxLength.bind(null, 'about', 'о себе', 100)]),
+  new Input('agreed', null, [RuleAgreed]),
+  new Input('files', null, [RuleFiles]),
 ]
 
 // possible for OR
