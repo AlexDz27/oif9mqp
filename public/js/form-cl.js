@@ -9,7 +9,7 @@ class Input {
 }
 
 class Rule {
-  // TODO: мне канеш не оч нравится что у меня повторяются name и nameRussian
+  // ? TODO: мне канеш не оч нравится что у меня повторяются name и nameRussian
   // было бы неплохо сразу их иметь уже как-то
   // Но походу это невозможно в моей текущей парадигме
   constructor(name, nameRussian) {
@@ -26,13 +26,14 @@ class Rule {
     if (this.input.nextElementSibling?.classList.contains('error')) return
 
     const html = `
-      <div class="error">${this.errorMessage()}</div>
+      <div class="error" id="error-${this.constructor.name}-${this.name}">${this.errorMessage()}</div>
     `
     this.input.insertAdjacentHTML('afterend', html)
   }
   hideError() {
-    if (this.input.nextElementSibling?.classList.contains('error')) {
-      this.input.nextElementSibling.remove()
+    const errorMessageElement = document.getElementById(`error-${this.constructor.name}-${this.name}`)
+    if (errorMessageElement) {
+      errorMessageElement.remove()
     }
   }
 }
@@ -71,7 +72,6 @@ class RuleMaxLength extends Rule {
     })
   }
 }
-
 
 const inputsWithValidationRules = [
   new Input('firstName', 'имя', [RuleRequired, RuleMaxLength]),
