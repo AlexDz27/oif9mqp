@@ -96,6 +96,7 @@ const inputsWithValidationRules = [
   new Input('patronymic', 'отчество', [RuleMaxLength]),
   new Input('dateOfBirth', 'дата рождения', [RuleRequired]),
   new Input('email', 'имейл', [RuleEmail]),
+  new Input('about', 'о себе', [RuleMaxLength.bind(null, 'about', 'о себе', 30)]),
 ]
 
 // possible for OR
