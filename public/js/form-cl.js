@@ -1,3 +1,12 @@
+const form = document.querySelector('form')
+// Пункт 2 - "Форма не должна отправляться при нажатии на клавишу на клавиатуре Enter"
+const submitButton = form.querySelector('button[type=submit]')
+form.onsubmit = (e) => {
+  if (document.activeElement !== submitButton) e.preventDefault()
+}
+
+const forbiddenErrorsBag = new Map()
+
 class Input {
   constructor(name, nameRussian, rules) {
     this.name = name
@@ -17,6 +26,23 @@ class Rule {
     this.nameRussian = nameRussian
 
     this.input = document.getElementById(this.name)
+
+    if (this.constructor.name === 'RuleRequired' || this.constructor.name === 'RuleAgreed') {
+      this.populateForbiddenErrorsBag()
+    }
+  }
+
+  getErrorId() {
+    return `error-${this.constructor.name}-${this.name}`
+  }
+
+  populateForbiddenErrorsBag() {
+    forbiddenErrorsBag.set(this.getErrorId(), true)
+    submitButton.disabled = forbiddenErrorsBag.size !== 0
+  }
+  depopulateForbiddenErrorsBag() {
+    forbiddenErrorsBag.delete(this.getErrorId())
+    submitButton.disabled = forbiddenErrorsBag.size !== 0
   }
 
   errorMessage() {}
@@ -25,14 +51,18 @@ class Rule {
   showError() {
     if (this.input.nextElementSibling?.classList.contains('error')) return
 
+    this.input.style.outline = '1px solid red'
+
     const html = `
-      <div class="error" id="error-${this.constructor.name}-${this.name}">${this.errorMessage()}</div>
+      <div class="error" id="${this.getErrorId()}">${this.errorMessage()}</div>
     `
     this.input.insertAdjacentHTML('afterend', html)
   }
   hideError() {
-    const errorMessageElement = document.getElementById(`error-${this.constructor.name}-${this.name}`)
+    const errorMessageElement = document.getElementById(this.getErrorId())
     if (errorMessageElement) {
+      this.input.style.outline = 'none'
+
       errorMessageElement.remove()
     }
   }
@@ -43,6 +73,14 @@ class RuleRequired extends Rule {
   }
 
   enforce() {
+    this.input.addEventListener('input', () => {
+      if (this.input.value.trim().length === 0) {
+        this.populateForbiddenErrorsBag()
+      } else {
+        this.depopulateForbiddenErrorsBag()
+      }
+    })
+
     this.input.addEventListener('blur', () => {
       if (this.input.value.trim().length === 0) {
         this.showError()
@@ -95,6 +133,14 @@ class RuleAgreed extends Rule {
   }
 
   enforce() {
+    this.input.addEventListener('change', () => {
+      if (!this.input.checked) {
+        this.populateForbiddenErrorsBag()
+      } else {
+        this.depopulateForbiddenErrorsBag()
+      }
+    })
+
     this.input.addEventListener('blur', () => {
       if (!this.input.checked) {
         this.showError()
@@ -137,7 +183,7 @@ const inputsWithValidationRules = [
   new Input('patronymic', 'отчество', [RuleMaxLength]),
   new Input('dateOfBirth', 'дата рождения', [RuleRequired]),
   new Input('email', 'имейл', [RuleEmail]),
-  new Input('about', 'о себе', [RuleMaxLength.bind(null, 'about', 'о себе', 100)]),
+  new Input('about', 'о себе', [RuleMaxLength.bind(null, 'about', 'о себе', 1000)]),
   new Input('agreed', null, [RuleAgreed]),
   new Input('files', null, [RuleFiles]),
 ]
