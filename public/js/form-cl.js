@@ -56,7 +56,11 @@ class Rule {
     const html = `
       <div class="error" id="${this.getErrorId()}">${this.errorMessage()}</div>
     `
-    this.input.insertAdjacentHTML('afterend', html)
+    if (this.name === 'phone') {
+      this.input.parentElement.insertAdjacentHTML('afterend', html)
+    } else {
+      this.input.insertAdjacentHTML('afterend', html)
+    }
   }
   hideError() {
     const errorMessageElement = document.getElementById(this.getErrorId())
@@ -232,3 +236,23 @@ const inputsWithValidationRules = [
   new Input('agreed', null, [RuleAgreed]),
   new Input('files', null, [RuleFiles]),
 ]
+
+let phonesCount = 1
+const addPhoneButton = document.getElementById('addPhoneButton')
+addPhoneButton.onclick = () => {
+  phonesCount++
+
+  const lastPhoneContainer = document.querySelectorAll('.phone-container')[document.querySelectorAll('.phone-container').length - 1]
+  const html = `
+      <div>
+        <label class="form-label" for="phone-${phonesCount}">Телефон ${phonesCount}</label>
+        <div class="phone-container">
+          <input class="form-control" name="phone-${phonesCount}" type="tel" id="phone-${phonesCount}">
+        </div>
+      </div>
+    `
+
+  lastPhoneContainer.insertAdjacentHTML('afterend', html)
+
+  if (phonesCount === 5) addPhoneButton.disabled = true
+}
