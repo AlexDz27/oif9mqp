@@ -16,12 +16,12 @@
 
 <form method="POST" action="/submit">
   <div class="mb-3">
-    <label class="form-label" for="firstName">Имя</label>
+    <label class="form-label" for="firstName">Имя <span style="color: red;">*</span></label>
     <input class="form-control" name="firstName" id="firstName">
   </div>
 
   <div class="mb-3">
-    <label class="form-label" for="secondName">Фамилия</label>
+    <label class="form-label" for="secondName">Фамилия <span style="color: red;">*</span></label>
     <input class="form-control" name="secondName" id="secondName">
   </div>
 
@@ -32,12 +32,12 @@
 
   {{-- TODO: 'max' attr for date --}}
   <div class="mb-3">
-    <label class="form-label" for="dateOfBirth">Дата рождения</label>
+    <label class="form-label" for="dateOfBirth">Дата рождения <span style="color: red;">*</span></label>
     <input type="date" class="form-control" name="dateOfBirth" id="dateOfBirth">
   </div>
 
   <div class="mb-3">
-    <label class="form-label" for="email">Имейл</label>
+    <label class="form-label" for="email">Имейл <span style="color: red;">* <sup>или телефон</sup></span></label>
     <input class="form-control" name="email" id="email">
   </div>
 
@@ -50,7 +50,7 @@
   </div>
 
   <div class="mb-3">
-    <label class="form-label" for="phone">Телефон</label>
+    <label class="form-label" for="phone">Телефон <span style="color: red;">* <sup>или имейл</sup></span></label>
     <div class="phone-container">
       <input class="form-control" name="phone" type="tel" id="phone">
       <button class="btn btn-primary" id="addPhoneButton" type="button">+</button>

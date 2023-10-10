@@ -18,16 +18,16 @@ class Input {
 }
 
 class Rule {
-  // ? TODO: мне канеш не оч нравится что у меня повторяются name и nameRussian
-  // было бы неплохо сразу их иметь уже как-то
-  // Но походу это невозможно в моей текущей парадигме
   constructor(name, nameRussian) {
     this.name = name
     this.nameRussian = nameRussian
 
     this.input = document.getElementById(this.name)
 
-    if (this.constructor.name === 'RuleRequired' || this.constructor.name === 'RuleAgreed') {
+    if (this.constructor.name === 'RuleRequired'
+        || this.constructor.name === 'RuleAgreed'
+        || this.constructor.name === 'RuleEmailOrPhone'
+    ) {
       this.populateForbiddenErrorsBag()
     }
   }
@@ -164,11 +164,55 @@ class RuleFiles extends Rule {
   }
 
   enforce() {
+    this.input.addEventListener('input', () => {
+      if (this.input.value.trim().length === 0) {
+        this.populateForbiddenErrorsBag()
+      } else {
+        this.depopulateForbiddenErrorsBag()
+      }
+    })
+
     this.input.addEventListener('change', () => {
       const files = this.input.files
       const oneOfFilesExceedsMaxSize = [...files].some(file => file.size > this.maxSizePerFile)
       const oneOfFilesIsNotAllowedFormat = [...files].some(file => file.type !== 'image/png' && file.type !== 'image/jpeg' && file.type !== 'application/pdf')
       if (files.length > 5 || oneOfFilesExceedsMaxSize || oneOfFilesIsNotAllowedFormat) {
+        this.showError()
+      } else {
+        this.hideError()
+      }
+    })
+  }
+}
+class RuleEmailOrPhone extends Rule {
+  constructor(name, nameRussian, emailInputName) {
+    super(name, nameRussian)
+
+    this.emailInput = document.getElementById(emailInputName)
+  }
+
+  errorMessage() {
+    return `Поле "имейл" либо поле "телефон" должно быть заполнено`
+  }
+
+  enforce() {
+    this.input.addEventListener('input', () => {
+      if (this.input.value.trim().length === 0) {
+        this.populateForbiddenErrorsBag()
+      } else {
+        this.depopulateForbiddenErrorsBag()
+      }
+    })
+    this.emailInput.addEventListener('input', () => {
+      if (this.emailInput.value.trim().length === 0) {
+        this.populateForbiddenErrorsBag()
+      } else {
+        this.depopulateForbiddenErrorsBag()
+      }
+    })
+
+    this.input.addEventListener('blur', () => {
+      if (this.input.value.trim().length === 0 && this.emailInput.value.trim().length === 0) {
         this.showError()
       } else {
         this.hideError()
@@ -183,10 +227,8 @@ const inputsWithValidationRules = [
   new Input('patronymic', 'отчество', [RuleMaxLength]),
   new Input('dateOfBirth', 'дата рождения', [RuleRequired]),
   new Input('email', 'имейл', [RuleEmail]),
+  new Input('phone', 'телефон', [RuleEmailOrPhone.bind(null, 'phone', 'телефон', 'email')]),
   new Input('about', 'о себе', [RuleMaxLength.bind(null, 'about', 'о себе', 1000)]),
   new Input('agreed', null, [RuleAgreed]),
   new Input('files', null, [RuleFiles]),
 ]
-
-// possible for OR
-// enforcePhoneOrEmailRequiredRule() {... new Input(...) ...}
