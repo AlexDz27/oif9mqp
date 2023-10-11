@@ -76,7 +76,7 @@
 
   <div class="mb-3">
     <label class="form-label" for="files">Файлы</label>
-    <input name="files" type="file" class="form-control" id="files" multiple>
+    <input name="files[]" type="file" class="form-control" id="files" multiple>
   </div>
 
   <div class="mb-3">
