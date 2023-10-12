@@ -54,7 +54,7 @@
   <div class="mb-3">
     <label class="form-label" for="phone">Телефон <span style="color: red;">* <sup>или имейл</sup></span></label>
     <div class="phone-container">
-      <input class="form-control" name="phone" type="tel" id="phone">
+      <input class="form-control" name="phone" type="number" id="phone">
       <button class="btn btn-primary" id="addPhoneButton" type="button">+</button>
     </div>
   </div>

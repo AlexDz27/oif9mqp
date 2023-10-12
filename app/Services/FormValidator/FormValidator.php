@@ -3,28 +3,85 @@
 namespace App\Services\FormValidator;
 
 use App\Services\FormValidator\Rules\RuleRequired;
+use App\Services\FormValidator\Rules\RuleMaxLength;
+use App\Services\FormValidator\Rules\RuleEmail;
+use App\Services\FormValidator\Rules\RuleIn;
+use App\Services\FormValidator\Rules\RuleNumber;
+use App\Services\FormValidator\Rules\RuleEmailOrPhone;
+use App\Services\FormValidator\Rules\RuleFiles;
 
 class FormValidator {
-  public $errorsBag = [];
+  public $checks = [];
 
   public function validate($formData) {
-    // TODO: короче тут надо по-умному сделать: => null | true
-    $checks = $formData;
+    // TODO: del this line and then check if erything works fine
+    $this->checks = $formData;
     extract($formData);
-    $checks['firstName'] = [
+    $this->checks['firstName'] = [
       'value' => $firstName,
       'hasPassedTheChecks' => [
         RuleRequired::getName() => RuleRequired::validate($firstName),
+        RuleMaxLength::getName() => RuleMaxLength::validate($firstName),
       ]
     ];
-    $checks['secondName'] = [
+    $this->checks['secondName'] = [
       'value' => $secondName,
       'hasPassedTheChecks' => [
         RuleRequired::getName() => RuleRequired::validate($secondName),
+        RuleMaxLength::getName() => RuleMaxLength::validate($secondName),
+      ]
+    ];
+    $this->checks['patronymic'] = [
+      'value' => $patronymic,
+      'hasPassedTheChecks' => [
+        RuleMaxLength::getName() => RuleMaxLength::validate($patronymic),
+      ]
+    ];
+    $this->checks['dateOfBirth'] = [
+      'value' => $dateOfBirth,
+      'hasPassedTheChecks' => [
+        RuleRequired::getName() => RuleRequired::validate($dateOfBirth),
+      ]
+    ];
+    $this->checks['email'] = [
+      'value' => $email,
+      'hasPassedTheChecks' => [
+        RuleEmail::getName() => RuleEmail::validate($email),
+      ]
+    ];
+    $this->checks['phoneCode'] = [
+      'value' => $phoneCode,
+      'hasPassedTheChecks' => [
+        RuleIn::getName() => RuleIn::validate($phoneCode, ['+375', '+7']),
+      ]
+    ];
+    $this->checks['phone'] = [
+      'value' => $phone,
+      'hasPassedTheChecks' => [
+        RuleNumber::getName() => RuleNumber::validate($phone),
+        RuleEmailOrPhone::getName() => RuleEmailOrPhone::validate($email, $phone),
+      ]
+    ];
+    $this->checks['familyStatus'] = [
+      'value' => $familyStatus,
+      'hasPassedTheChecks' => [
+        RuleIn::getName() => RuleIn::validate($familyStatus, ['single', 'married', 'divorced', 'widowed']),
+      ]
+    ];
+    $this->checks['about'] = [
+      'value' => $about,
+      'hasPassedTheChecks' => [
+        RuleMaxLength::getName() => RuleMaxLength::validate($about, 30),
+      ]
+    ];
+    $this->checks['files'] = [
+      'value' => $files,
+      'hasPassedTheChecks' => [
+        RuleFiles::getName() => RuleFiles::validate($files),
       ]
     ];
 
-    var_dump($checks);
+    var_dump($this->checks);
 
     return true;
   }

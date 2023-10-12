@@ -2,8 +2,8 @@
 
 namespace App\Services\FormValidator\Rules;
 
-class Rule {  // TODO: 🎯 abs?
-  public $name;  // TODO: мейби даже и не надо
-
-  public function test($value) {}
+abstract class Rule {
+  public static function getName() {
+    return (new \ReflectionClass(static::class))->getShortName();
+  }
 }

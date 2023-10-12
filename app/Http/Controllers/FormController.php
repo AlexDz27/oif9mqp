@@ -7,7 +7,9 @@ use App\Services\FormValidator\FormValidator;
 
 class FormController extends Controller {
   public function submit(Request $request) {
-    $files = $request->files->all()['files'] ?? [];
+    $files = $_FILES['files'];
+    // TODO: также для файлов нужно обработать ситуацию, если что-то пошло не так с загрузкой файлов,
+    // то есть надо будет смотреть в $_FILES['files]['error']
     $formData = [...$request->request->all(), 'files' => $files];
 
     $formValidator = new FormValidator();

@@ -58,7 +58,7 @@ addPhoneButton.onclick = () => {
       <div>
         <label class="form-label" for="phone-${phonesCount}">Телефон ${phonesCount}</label>
         <div class="phone-container">
-          <input class="form-control" name="phone-${phonesCount}" type="tel" id="phone-${phonesCount}">
+          <input class="form-control" name="phone-${phonesCount}" type="number" id="phone-${phonesCount}">
         </div>
       </div>
     `

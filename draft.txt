@@ -1,0 +1,9 @@
+<?php
+
+namespace App\Services\FormValidator\Rules;
+
+interface RuleInterface {
+  public static function validate(...$args);
+
+  public static function getName();
+}
