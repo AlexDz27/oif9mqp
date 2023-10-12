@@ -14,8 +14,6 @@ class FormValidator {
   public $checks = [];
 
   public function validate($formData) {
-    // TODO: del this line and then check if erything works fine
-    $this->checks = $formData;
     extract($formData);
     $this->checks['firstName'] = [
       'value' => $firstName,
@@ -55,6 +53,7 @@ class FormValidator {
         RuleIn::getName() => RuleIn::validate($phoneCode, ['+375', '+7']),
       ]
     ];
+    // TODO: также нужно проверять, что на бэкэнд пришло не более 5 номеров
     $this->checks['phone'] = [
       'value' => $phone,
       'hasPassedTheChecks' => [
@@ -81,12 +80,25 @@ class FormValidator {
       ]
     ];
 
-    var_dump($this->checks);
+    foreach ($this->checks as $check) {
+      foreach (array_values($check['hasPassedTheChecks']) as $validationResult) {
+        if ($validationResult === false) return false;
+      }
+    }
 
     return true;
   }
 
   public function getErrorResponse() {
-    return 'some err response';
+    $errResponse = ['status' => 'error', 'errors' => []];
+    foreach ($this->checks as $input => $check) {
+      foreach ($check['hasPassedTheChecks'] as $checkRule => $validationResult) {
+        if ($validationResult === false) {
+          $errResponse['errors'][$input][$checkRule] = $validationResult;
+        }
+      }
+    }
+
+    return json_encode($errResponse);
   }
 }
