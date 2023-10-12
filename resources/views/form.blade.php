@@ -85,7 +85,7 @@
   </div>
 
   <div class="d-grid">
-    <button type="submit" class="btn btn-primary" >Отправить</button>
+    <button type="submit" class="btn btn-primary" disabled>Отправить</button>
   </div>
 </form>
 </body>

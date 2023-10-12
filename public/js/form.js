@@ -6,6 +6,7 @@ form.onsubmit = (e) => {
   if (document.activeElement !== submitButton) return
 
   const formData = new FormData(form)
+  // TODO: )del
   // const formDataObject = {}
   // formData.forEach((value, key) => formDataObject[key] = value)
   // console.log(formDataObject)
@@ -18,8 +19,22 @@ form.onsubmit = (e) => {
     // },
     body: formData
   })
-    .then(response => response.text())
-    .then(data => console.log(data))
+    .then(response => response.json())
+    .then(response => {
+      if (response.status === 'success') {
+        document.body.innerHTML = `
+          <h1>Успешно!</h1>
+          <h2>Результат отправки формы:</h2>
+          <pre>${JSON.stringify(response.result, null, 2)}</pre>
+        `
+      } else if (response.status === 'error') {
+        // TODO: if error behavior
+        console.log('err!')
+        console.log(response)
+      } else {
+        console.error('Unknown response status from server')
+      }
+    })
 }
 
 const errorsBag = new Map()

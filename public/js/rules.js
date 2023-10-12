@@ -19,11 +19,11 @@ class Rule {
 
   populateErrorsBag() {
     errorsBag.set(this.getErrorId(), true)
-    // submitButton.disabled = errorsBag.size !== 0
+    submitButton.disabled = errorsBag.size !== 0
   }
   depopulateErrorsBag() {
     errorsBag.delete(this.getErrorId())
-    // submitButton.disabled = errorsBag.size !== 0
+    submitButton.disabled = errorsBag.size !== 0
   }
 
   errorMessage() {}
@@ -45,7 +45,6 @@ class Rule {
     }
   }
   hideError() {
-    // console.log(1)
     const errorMessageElement = document.getElementById(this.getErrorId())
     if (errorMessageElement) {
       this.input.style.outline = 'none'
@@ -157,8 +156,8 @@ class RuleAgreed extends Rule {
 }
 class RuleFiles extends Rule {
   // 'maxSize = 5e+6' means 5000000 (5 million). In our case, 5 megabytes
-  // TODO: redo allowedFormats
-  constructor(name, nameRussian, maxFiles = 5, maxSizePerFile = 5e+6, allowedFormats = ['jpg', 'png', 'pdf']) {
+  constructor(name, nameRussian, maxFiles = 5, maxSizePerFile = 5e+6,
+    allowedFormats = ['image/jpeg', 'image/png', 'application/pdf']) {
     super(name, nameRussian)
     this.maxFiles = maxFiles
     this.maxSizePerFile = maxSizePerFile
@@ -172,9 +171,8 @@ class RuleFiles extends Rule {
   enforce() {
     this.input.addEventListener('change', () => {
       const files = this.input.files
-      console.log(files[0])
       const oneOfFilesExceedsMaxSize = [...files].some(file => file.size > this.maxSizePerFile)
-      const oneOfFilesIsNotAllowedFormat = [...files].some(file => file.type !== 'image/png' && file.type !== 'image/jpeg' && file.type !== 'application/pdf')
+      const oneOfFilesIsNotAllowedFormat = [...files].some(file => !this.allowedFormats.includes(file.type))
       if (files.length > 5 || oneOfFilesExceedsMaxSize || oneOfFilesIsNotAllowedFormat) {
         this.populateErrorsBag()
         this.showError()
