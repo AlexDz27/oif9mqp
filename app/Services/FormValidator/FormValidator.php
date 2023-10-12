@@ -71,7 +71,7 @@ class FormValidator {
     $this->checks['about'] = [
       'value' => $about,
       'hasPassedTheChecks' => [
-        RuleMaxLength::getName() => RuleMaxLength::validate($about, 30),
+        RuleMaxLength::getName() => RuleMaxLength::validate($about, 1000),
       ]
     ];
     $this->checks['files'] = [

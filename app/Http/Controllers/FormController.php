@@ -17,6 +17,8 @@ class FormController extends Controller {
       return $formValidator->getErrorResponse();
     }
 
-    return 'success response';
+    $successResponse = ['status' => 'success'];
+
+    return json_encode($successResponse);
   }
 }

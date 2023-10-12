@@ -5,9 +5,11 @@ namespace App\Services\FormValidator\Rules;
 use App\Services\FormValidator\Rules\Rule;
 
 class RuleFiles extends Rule {
+  const NO_FILE_UPLOADED = 4;
+
   public static function validate($files, $maxFiles = 5, $maxSizePerFile = 5e+6,
    $allowedFormats = ['image/jpeg', 'image/png', 'application/pdf']) {
-    if (count($files['name']) === 0) return null;
+    if ($files['error'][0] === self::NO_FILE_UPLOADED) return null;
 
     $oneOfFilesExceedsMaxSize = array_filter($files['size'], function ($size) use ($maxSizePerFile) {
       if ($size > $maxSizePerFile) return true;
