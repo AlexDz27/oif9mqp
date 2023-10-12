@@ -53,7 +53,8 @@ class FormValidator {
         RuleIn::getName() => RuleIn::validate($phoneCode, ['+375', '+7']),
       ]
     ];
-    // TODO: также нужно проверять, что на бэкэнд пришло не более 5 номеров
+    // TODO: ещё нужно проверять, что на бэкэнд пришло не более 5 номеров
+    // и их так же нужно проверять на RuleNumber
     $this->checks['phone'] = [
       'value' => $phone,
       'hasPassedTheChecks' => [

@@ -8,7 +8,8 @@ class RuleNumber extends Rule {
   public static function validate($value) {
     if ($value === null) return null;
 
-    if (!is_int($value)) {
+    $numberValue = (int) $value;
+    if (!is_int($numberValue)) {
       return false;
     }
 
