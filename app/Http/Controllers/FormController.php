@@ -10,8 +10,9 @@ class FormController extends Controller {
     $files = $request->files->all()['files'] ?? [];
     $formData = [...$request->request->all(), 'files' => $files];
 
-    if (!FormValidator::validate($formData)) {
-      return 'error response';
+    $formValidator = new FormValidator();
+    if (!$formValidator->validate($formData)) {
+      return $formValidator->getErrorResponse();
     }
 
     return 'success response';

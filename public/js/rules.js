@@ -45,6 +45,7 @@ class Rule {
     }
   }
   hideError() {
+    // console.log(1)
     const errorMessageElement = document.getElementById(this.getErrorId())
     if (errorMessageElement) {
       this.input.style.outline = 'none'
