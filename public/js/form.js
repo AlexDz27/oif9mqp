@@ -6,17 +6,8 @@ form.onsubmit = (e) => {
   if (document.activeElement !== submitButton) return
 
   const formData = new FormData(form)
-  // TODO: )del
-  // const formDataObject = {}
-  // formData.forEach((value, key) => formDataObject[key] = value)
-  // console.log(formDataObject)
   fetch('/api/check', {
     method: 'POST',
-    // TODO: i can probably delete headers bc, probably, fetch automatically sets proper content-type with boundary
-    // 🎯 write it into knowledge
-    // headers: {
-    //   'Content-Type': 'multipart/form-data',
-    // },
     body: formData
   })
     .then(response => response.json())
@@ -28,11 +19,15 @@ form.onsubmit = (e) => {
           <pre>${JSON.stringify(response.result, null, 2)}</pre>
         `
       } else if (response.status === 'error') {
-        // TODO: if error behavior
-        console.log('err!')
-        console.log(response)
+        const errorsElem = document.getElementById('serverErrors')
+        errorsElem.innerHTML = `
+          Форма не прошла проверку на сервере. <br>
+          Обнаружены следующие ошибки: <br>
+          <pre>${JSON.stringify(response.errors, null, 2)}</pre>
+        `
       } else {
         console.error('Unknown response status from server')
+        alert('Unknown response status from server')
       }
     })
 }

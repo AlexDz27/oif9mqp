@@ -87,6 +87,8 @@
   <div class="d-grid">
     <button type="submit" class="btn btn-primary" disabled>Отправить</button>
   </div>
+
+  <div class="d-grid" id="serverErrors"></div>
 </form>
 </body>
 </html>
