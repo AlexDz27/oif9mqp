@@ -3,6 +3,7 @@
 namespace App\Services\FormValidator\Rules;
 
 use App\Services\FormValidator\Rules\Rule;
+use Illuminate\Support\Facades\Storage;
 
 class RuleFiles extends Rule {
   const NO_FILE_UPLOADED = 4;
@@ -26,7 +27,7 @@ class RuleFiles extends Rule {
       return false;
     }) === [] ? false : true;
 
-    if (count($files['name']) > $maxFiles || $oneOfFilesExceedsMaxSize || $oneOfFilesIsNotAllowedFormat) {
+    if (count($files['name']) > $this->maxFiles || $oneOfFilesExceedsMaxSize || $oneOfFilesIsNotAllowedFormat) {
       return false;
     }
 

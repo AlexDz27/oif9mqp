@@ -5,6 +5,7 @@ form.onsubmit = (e) => {
   e.preventDefault()
   if (document.activeElement !== submitButton) return
 
+  submitButton.disabled = true
   const formData = new FormData(form)
   fetch('/api/check', {
     method: 'POST',

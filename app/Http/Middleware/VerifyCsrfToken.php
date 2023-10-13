@@ -11,8 +11,6 @@ class VerifyCsrfToken extends Middleware
      *
      * @var array<int, string>
      */
-    // TODO: think about whether I should have CSRF protection
     protected $except = [
-      'http://localhost:8000/submit'
     ];
 }

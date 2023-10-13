@@ -5,6 +5,11 @@ use Illuminate\Support\ServiceProvider;
 
 return [
 
+    'host' => 'localhost',
+    'db' => 'tdkomplekt',
+    'user' => 'root',
+    'pwd' => 'root',
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
