@@ -35,9 +35,12 @@ class FormValidator {
         RuleMaxLength::getName() => RuleMaxLength::validate($patronymic),
       ]
     ];
+    // TODO: также здесь нужно проверять, что дата не превышает значение 'сегодня'
+    // TODO: 🎯🎯🎯
     $this->checks['dateOfBirth'] = [
       'value' => $dateOfBirth,
-      'hasPassedTheChecks' => [
+      'hasPassedTheChecks' => [  // 'rulesChecks' => [RR:GN => ['result' => val]]
+        // OR RR::val()->genMessage() -> ..?????
         RuleRequired::getName() => RuleRequired::validate($dateOfBirth),
       ]
     ];
@@ -95,10 +98,16 @@ class FormValidator {
     foreach ($this->checks as $input => $check) {
       foreach ($check['hasPassedTheChecks'] as $checkRule => $validationResult) {
         if ($validationResult === false) {
-          $errResponse['errors'][$input][$checkRule] = $validationResult;
+          $errResponse['errors'][$input][$checkRule] = [
+            'result' => $validationResult,
+            'message' => $checkRule
+          ];
         }
       }
     }
+
+    var_dump($errResponse);
+    die();
 
     return json_encode($errResponse);
   }

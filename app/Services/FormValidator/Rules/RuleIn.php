@@ -12,4 +12,6 @@ class RuleIn extends Rule {
 
     return true;
   }
+
+  // public static function getErrorMessage()
 }
