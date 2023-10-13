@@ -15,13 +15,22 @@ class FormValidator {
 
   public function validate($formData) {
     extract($formData);
+    // $generateValidations = function($rules, $inputValue, $inputName, $inputNameRus) {
+    //   return array_map(function($rule) {
+    //     return ['result' => $rule::validate($inputValue), 'message' => $rule::generateMessage($inputName, $inputNameRus)];
+    //   }, $rules);
+    // };
+    $generateValidations = function($rules, $inputValue) {
+      return array_merge(...array_map(function($rule) use ($inputValue) {
+        return [$rule::getName() => $rule::validate($inputValue)];
+      }, $rules));
+    };
+    // TODO: // -> 'validations'
     $this->checks['firstName'] = [
       'value' => $firstName,
-      'hasPassedTheChecks' => [
-        RuleRequired::getName() => RuleRequired::validate($firstName),
-        RuleMaxLength::getName() => RuleMaxLength::validate($firstName),
-      ]
+      'hasPassedTheChecks' => $generateValidations([RuleRequired::class, RuleMaxLength::class], $firstName)
     ];
+    // возможность: 'vals' => [RR, RML]; 'vals' foreach () {...}
     $this->checks['secondName'] = [
       'value' => $secondName,
       'hasPassedTheChecks' => [
@@ -29,6 +38,8 @@ class FormValidator {
         RuleMaxLength::getName() => RuleMaxLength::validate($secondName),
       ]
     ];
+    var_dump($this->checks);
+    die();
     $this->checks['patronymic'] = [
       'value' => $patronymic,
       'hasPassedTheChecks' => [
