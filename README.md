@@ -4,17 +4,17 @@
  - Windows 10
  - PHP 8.2.8
  - MySQL 8
- - php.ini: `upload_max_filesize = 8M, `post_max_size = 8M
+ - php.ini: `upload_max_filesize = 8M`, `post_max_size = 8M`
 
  Заметка про Xdebug:
  у меня не запускался вообще Ларавел в некоторых случаях, когда 
  у меня были такие настройки Xdebug в моем php.ini:
- `
+ ```
  zend_extension = xdebug
  xdebug.var_display_max_data = -1
  xdebug.var_display_max_depth = 500
  xdebug.var_display_max_children = 256
- `
+ ```
 
  Чтобы исправить это, я комментировал последние две строчки.
 
@@ -28,7 +28,7 @@
  7. Готово!
 
  ## DDL для таблицы
- `
+ ```
  CREATE TABLE `results` (
   `id` int NOT NULL AUTO_INCREMENT,
   `firstName` varchar(20) NOT NULL,
@@ -43,4 +43,4 @@
   `filesDirPath` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
- `
+ ```
