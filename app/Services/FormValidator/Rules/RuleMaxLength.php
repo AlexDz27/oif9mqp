@@ -18,4 +18,10 @@ class RuleMaxLength extends Rule {
 
     return true;
   }
+
+  public function generateErrorMessage($inputName = null) {
+    $inputNameInString = $inputName ?? '';
+
+    return "Поле '{$inputNameInString}' должно иметь не более {$this->maxLength} символов";
+  }
 }

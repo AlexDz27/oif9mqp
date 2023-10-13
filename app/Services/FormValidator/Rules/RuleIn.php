@@ -17,5 +17,10 @@ class RuleIn extends Rule {
     return true;
   }
 
-  // public static function getErrorMessage()
+  public function generateErrorMessage($inputName = null) {
+    $inputNameInString = $inputName ?? '';
+    $imploded = implode(', ', $this->allowedValues);
+
+    return "Поле '{$inputNameInString}' должно иметь одно из значений: {$imploded}";
+  }
 }

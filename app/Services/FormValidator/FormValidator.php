@@ -15,68 +15,61 @@ class FormValidator {
 
   public function validate($formData) {
     extract($formData);
-    $generateValidations = function($rules, $inputValue) {
-      return array_merge(...array_map(function($rule) use ($inputValue) {
-        // $rule->value = $inputValue;
-        return [$rule::getName() => $rule->validate($inputValue)];
+    $generateValidations = function($rules, $inputValue, $inputName = null) {
+      return array_merge(...array_map(function($rule) use ($inputValue, $inputName) {
+        return [$rule::getName() => [
+          'result' => $rule->validate($inputValue),
+          'errorMessage' => $rule->generateErrorMessage($inputName)
+        ]];
       }, $rules));
     };
-    // TODO: // -> 'validations'
     $this->checks['firstName'] = [
       'value' => $firstName,
-      'hasPassedTheChecks' => $generateValidations([new RuleRequired(), new RuleMaxLength()], $firstName)
+      'validations' => $generateValidations([new RuleRequired(), new RuleMaxLength()], $firstName, 'имя')
     ];
     $this->checks['secondName'] = [
       'value' => $secondName,
-      'hasPassedTheChecks' => $generateValidations([new RuleRequired(), new RuleMaxLength()], $secondName)
+      'validations' => $generateValidations([new RuleRequired(), new RuleMaxLength()], $secondName, 'фамилия')
     ];
     $this->checks['patronymic'] = [
       'value' => $patronymic,
-      'hasPassedTheChecks' => $generateValidations([new RuleMaxLength()], $patronymic)
+      'validations' => $generateValidations([new RuleMaxLength()], $patronymic, 'отчество')
     ];
     // TODO: также здесь нужно проверять, что дата не превышает значение 'сегодня'
     $this->checks['dateOfBirth'] = [
       'value' => $dateOfBirth,
-      'hasPassedTheChecks' => $generateValidations([new RuleRequired()], $dateOfBirth)
+      'validations' => $generateValidations([new RuleRequired()], $dateOfBirth, 'дата рождения')
     ];
     $this->checks['email'] = [
       'value' => $email,
-      'hasPassedTheChecks' => $generateValidations([new RuleEmail()], $email)
+      'validations' => $generateValidations([new RuleEmail()], $email, 'имейл')
     ];
     $this->checks['phoneCode'] = [
       'value' => $phoneCode,
-      'hasPassedTheChecks' => $generateValidations([new RuleIn(['+375', '+7'])], $phoneCode)
+      'validations' => $generateValidations([new RuleIn(['+375', '+7'])], $phoneCode, 'код страны')
     ];
     // TODO: ещё нужно проверять, что на бэкэнд пришло не более 5 номеров
     // и их так же нужно проверять на RuleNumber
     $this->checks['phone'] = [
       'value' => $phone,
-      'hasPassedTheChecks' => $generateValidations([new RuleNumber(), new RuleEmailOrPhone($email, $phone)], $phone)
+      'validations' => $generateValidations([new RuleNumber(), new RuleEmailOrPhone($email, 'имейл', $phone, 'телефон')], $phone, 'телефон')
     ];
-    var_dump($this->checks);
-    die();
     $this->checks['familyStatus'] = [
       'value' => $familyStatus,
-      'hasPassedTheChecks' => [
-        RuleIn::getName() => RuleIn::validate($familyStatus, ['single', 'married', 'divorced', 'widowed']),
-      ]
+      'validations' => $generateValidations([new RuleIn(['single', 'married', 'divorced', 'widowed'])], $familyStatus, 'семейное положение')
     ];
     $this->checks['about'] = [
       'value' => $about,
-      'hasPassedTheChecks' => [
-        RuleMaxLength::getName() => RuleMaxLength::validate($about, 1000),
-      ]
+      'validations' => $generateValidations([new RuleMaxLength(1000)], $about, 'о себе')
     ];
     $this->checks['files'] = [
       'value' => $files,
-      'hasPassedTheChecks' => [
-        RuleFiles::getName() => RuleFiles::validate($files),
-      ]
+      'validations' => $generateValidations([new RuleFiles()], $files)
     ];
 
     foreach ($this->checks as $check) {
-      foreach (array_values($check['hasPassedTheChecks']) as $validationResult) {
-        if ($validationResult === false) return false;
+      foreach (array_values($check['validations']) as $validation) {
+        if ($validation['result'] === false) return false;
       }
     }
 
@@ -86,18 +79,12 @@ class FormValidator {
   public function getErrorResponse() {
     $errResponse = ['status' => 'error', 'errors' => []];
     foreach ($this->checks as $input => $check) {
-      foreach ($check['hasPassedTheChecks'] as $checkRule => $validationResult) {
-        if ($validationResult === false) {
-          $errResponse['errors'][$input][$checkRule] = [
-            'result' => $validationResult,
-            'message' => $checkRule
-          ];
+      foreach ($check['validations'] as $rule => $validation) {
+        if ($validation['result'] === false) {
+          $errResponse['errors'][$input] = $validation;
         }
       }
     }
-
-    var_dump($errResponse);
-    die();
 
     return json_encode($errResponse);
   }

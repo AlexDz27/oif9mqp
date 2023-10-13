@@ -15,4 +15,10 @@ class RuleNumber extends Rule {
 
     return true;
   }
+
+  public function generateErrorMessage($inputName = null) {
+    $inputNameInString = $inputName ?? '';
+
+    return "Поле '{$inputNameInString}' должно быть числом";
+  }
 }
