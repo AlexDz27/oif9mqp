@@ -24,9 +24,8 @@ class FormController extends Controller {
     $files = $formData['files'];
     unset($formData['files']);
     $formData['filesDirPath'] = 'uploads/' . time();
-    mkdir($formData['filesDirPath']);
     if ($files['error'][0] !== self::NO_FILE_UPLOADED) {
-      // $formData['filesDirPath'] = $files ...
+      mkdir($formData['filesDirPath']);
       foreach ($files['name'] as $idx => $file) {
         move_uploaded_file($files['tmp_name'][$idx], $formData['filesDirPath'] . "/$file");
       }
