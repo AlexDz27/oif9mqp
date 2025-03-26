@@ -7,7 +7,7 @@ use App\Services\FormValidator\FormValidator;
 use App\Services\Db;
 
 class FormController extends Controller {
-  const NO_FILE_UPLOADED = 4;
+  const ERR_NO_FILE_UPLOADED = 4;
 
   public function submit(Request $request) {
     $files = $_FILES['files'];
@@ -24,7 +24,7 @@ class FormController extends Controller {
     $files = $formData['files'];
     unset($formData['files']);
     $formData['filesDirPath'] = null;
-    if ($files['error'][0] !== self::NO_FILE_UPLOADED) {
+    if ($files['error'][0] !== self::ERR_NO_FILE_UPLOADED) {
       $formData['filesDirPath'] = 'uploads/' . time();
       mkdir($formData['filesDirPath']);
       foreach ($files['name'] as $idx => $file) {
